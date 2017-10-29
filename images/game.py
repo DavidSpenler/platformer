@@ -28,7 +28,7 @@ global_vars.foreground = pyglet.graphics.OrderedGroup(1)
 
 Objects = []
 
-Player = player(6,200,'playerr1.png',Objects)
+Player = player(400,250,'playerr1.png',Objects)
 
 Ground1 = ground(150,110,'ground.png',Objects)
 Ground2 = ground(500,220,'ground.png',Objects)

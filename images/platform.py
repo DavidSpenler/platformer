@@ -19,12 +19,12 @@ class platform(base_object):
             self.speedx*=-1
         self.sprite.x+=self.speedx
         self.dist+=self.speedx
-        self.updatehitbox()
+        self.update_hitbox()
         for object in self.level:
             if object != self and 'move' in dir(object):
                 cl,cr,cu,cd = collision(self,object,0,0)
                 if cl:
-                    object.sprite.x = self.hitbox[0]-6
+                    object.sprite.x = self.hitbox[0]-7
                 elif cr:
-                    object.sprite.x = self.hitbox[2]+6
+                    object.sprite.x = self.hitbox[2]+7
 

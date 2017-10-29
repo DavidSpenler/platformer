@@ -9,17 +9,8 @@ import global_vars
 class enemy(base_object):
 
     def __init__(self,x,y,image,level):
-        base_object.__init__(self,x,y,image,level,"f")	
+        base_object.__init__(self,x,y,image,level,"f",0,-2)	
         self.Objects = level
-        '''
-        level.append(self)
-        self.image = pyglet.resource.image(image)
-        self.sprite = pyglet.sprite.Sprite(self.image,batch=global_vars.batch,group=global_vars.foreground)
-        self.sprite.image.anchor_x = self.image.width/2
-        self.sprite.image.anchor_y = self.sprite.image.height/2
-        self.sprite.x = x
-        self.sprite.y = y
-        '''
         self.speedx = 0
         self.speedy = 0
         self.terminalv = -30
@@ -34,7 +25,7 @@ class enemy(base_object):
         self.bufferw = 1
         self.dead = False
         self.bufferd = 1
-        #self.updatehitbox()
+        #self.update_hitbox()
 
     def fall(self):
         if self.speedy > self.terminalv:
@@ -43,14 +34,14 @@ class enemy(base_object):
                 self.buffery = 1
             else:
                 self.buffery+=1
-        self.updatehitbox()
+        self.update_hitbox()
 
         for object in self.Objects:
             cl,cr,cu,cd = collision(self,object,0,self.speedy)
             if cd and object != self:
                 self.speedy = 0
                 self.sprite.y = object.hitbox[3]+self.sprite.image.height/2
-                self.updatehitbox()
+                self.update_hitbox()
 
     def walk(self):
         self.speedx = self.dir
@@ -68,7 +59,7 @@ class enemy(base_object):
                 self.speedx = self.dir
         if self.dead == True:
             self.speedx = 0
-        self.updatehitbox()
+        self.update_hitbox()
 
     def animate(self):
         if self.bufferw == 10:
@@ -85,10 +76,12 @@ class enemy(base_object):
             self.sprite.image.anchor_y = self.image.height/2
 
     def die(self):
-        self.sprite.image = pyglet.resource.image('enemy3.png')
+        self.image = pyglet.resource.image('enemy3.png')
+        self.sprite.image = self.image
+        self.update_dimensions(self.image.height,self.image.width)
         self.sprite.image.anchor_x = self.sprite.image.width/2
         self.sprite.image.anchor_y = self.sprite.image.height/2
-        self.updatehitbox()
+        self.update_hitbox()
         self.dead = True
         if self.bufferd == 30:
             self.Objects.remove(self)
@@ -97,7 +90,7 @@ class enemy(base_object):
             self.bufferd+=1
             
     def move(self):
-        self.updatehitbox()
+        self.update_hitbox()
         if self.dead:
             self.die()
         self.fall()
@@ -105,4 +98,4 @@ class enemy(base_object):
         self.animate()
         self.sprite.x+=self.speedx
         self.sprite.y+=self.speedy
-        self.updatehitbox()
+        self.update_hitbox()
