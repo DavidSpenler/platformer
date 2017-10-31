@@ -28,17 +28,18 @@ global_vars.foreground = pyglet.graphics.OrderedGroup(1)
 
 Objects = []
 
+Platform1 = platform(80,280,'platform.png',30,260,Objects)
+Platform2 = platform(110,260,'platform.png',60,260,Objects)
+Platform3 = platform(140,240,'platform.png',90,260,Objects)
+Platform4 = platform(170,220,'platform.png',120,260,Objects)
+Platform5 = platform(200,200,'platform.png',150,360,Objects)
+
 Player = player(400,250,'playerr1.png',Objects)
 
 Ground1 = ground(150,110,'ground.png',Objects)
 Ground2 = ground(500,220,'ground.png',Objects)
 Ground3 = ground(500,70,'ground.png',Objects)
 Ground4 = ground(650,110,'ground.png',Objects)
-Platform1 = platform(80,280,'platform.png',30,260,Objects)
-Platform2 = platform(110,260,'platform.png',60,260,Objects)
-Platform3 = platform(140,240,'platform.png',90,260,Objects)
-Platform4 = platform(170,220,'platform.png',120,260,Objects)
-Platform5 = platform(200,200,'platform.png',150,360,Objects)
 Gate1 = gate(560,164,'gater.png',Objects)
 Gate2 = gate(590,164,'gateb.png',Objects)
 Gate3 = gate(620,164,'gatey.png',Objects)
@@ -93,5 +94,5 @@ def update(dt):
     window.clear()
    
 if __name__ == '__main__':
-    pyglet.clock.schedule_interval(update, 1/30)
+    pyglet.clock.schedule_interval(update, 1/10)
     pyglet.app.run()

@@ -20,11 +20,20 @@ class platform(base_object):
         self.sprite.x+=self.speedx
         self.dist+=self.speedx
         self.update_hitbox()
+        '''
         for object in self.level:
             if object != self and 'move' in dir(object):
                 cl,cr,cu,cd = collision(self,object,0,0)
                 if cl:
-                    object.sprite.x = self.hitbox[0]-7
+                    if object.__class__.__name__ == 'player':
+                        object.movex += self.hitbox[0]-(object.sprite.x+6)
+                        object.scroll()
+                    else:
+                        object.sprite.x = self.hitbox[0]-6
                 elif cr:
-                    object.sprite.x = self.hitbox[2]+7
-
+                    if object.__class__.__name__ == 'player':
+                        object.movex += self.hitbox[2]-(object.sprite.x-6)
+                        object.scroll()
+                    else:
+                        object.sprite.x = self.hitbox[2]+6
+        '''

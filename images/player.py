@@ -119,7 +119,6 @@ class player(base_object):
                 self.die()
         self.update_hitbox()
             
-    
     def jumping(self):
         if self.up == True and not self.jump and self.speedy == 0 :
             self.jump = True
@@ -135,7 +134,7 @@ class player(base_object):
                 self.buffery+=1
         self.update_hitbox()
         for object in [object for object in self.Objects if object != self]:
-            cl,cr,cu,cd = collision(self,object,self.movex,self.speedy+self.movey)
+            cl,cr,cu,cd = collision(self,object,self.movex+self.carryx,self.speedy+self.movey)
             if cd or cu:
                 self.speedy = 0
                 if cd:
@@ -215,6 +214,7 @@ class player(base_object):
         self.jumping()
         #self.sprite.x+=(self.speedx+self.carryx)
         #self.sprite.y+=self.speedy
+        '''
         for object in self.level:
             if (object != self):
                 object.sprite.x-=(self.speedx+self.carryx+self.movex)
@@ -222,4 +222,15 @@ class player(base_object):
                 object.update_hitbox()
         self.movex = 0
         self.movey = 0
+        '''
+        self.scroll()
         self.update_hitbox()
+
+    def scroll(self):
+        for object in self.level:
+            if (object != self):
+                object.sprite.x-=(self.speedx+self.carryx+self.movex)
+                object.sprite.y-=(self.speedy+self.movey)
+                object.update_hitbox()
+        self.movex = 0
+        self.movey = 0

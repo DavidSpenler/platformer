@@ -26,6 +26,7 @@ class button(base_object):
             self.sprite.y = self.y-2
             self.update_dimensions(self.image.height,self.image.width)
             self.update_hitbox()
+            print(self.height)
 
     def update_hitbox(self):
         self.hitbox = [
