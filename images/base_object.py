@@ -27,6 +27,20 @@ class base_object():
         self.update_dimensions(self.image.height,self.image.width)
         self.update_hitbox()
 
+        self.stats = {
+            'can-kill-enemies':False,
+            'gravity':False,
+            'weight':3
+        }	
+        self.weight = self.stats['weight']
+        self.pusher = None
+
+    def get_pusher_weight(self):
+        if self.pusher == None:
+            return self.weight
+        else:
+            return self.pusher.get_pusher_weight()
+
     def update_hitbox(self):
         self.hitbox = [
             self.sprite.x-self.width/2-self.width_mod,

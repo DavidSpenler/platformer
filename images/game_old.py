@@ -341,7 +341,7 @@ class player():
                 self.buffery+=1
         self.updatehitbox()
         for object in Objects:
-            cl,cr,cu,cd = collision(self,object,0,self.speedy)
+            cl,cr,cu,cd = collision(self,object,self.carryx,self.speedy)
             if cd or cu:
                 #print(cl,cr,cu,cd)
                 self.speedy = 0

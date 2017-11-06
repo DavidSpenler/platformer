@@ -1,6 +1,7 @@
 import pyglet
 
 from collisions import collision
+from collisions import clipped
 
 from base_object import base_object
 
@@ -70,8 +71,15 @@ class player(base_object):
         #Possibly unnecessary
         self.imagen = ('player'+self.dir+'1.png')
         
-        self.Objects = level
+        self.level = level
 
+        self.stats = {
+            'can-kill-enemies':True,
+            'weight':2
+        }
+        self.weight = 2
+        self.pusher = None
+    '''
     def update_hitbox(self):
         
         self.hitbox = [
@@ -80,7 +88,7 @@ class player(base_object):
             self.sprite.x+self.width/2,
             self.sprite.y+self.sprite.image.height/2
             ]
-
+    '''
     def run(self):
         self.carryx = 0
         if self.left == True and self.speedx != -self.maxspeedx:
@@ -95,7 +103,7 @@ class player(base_object):
         if self.plat != None:
             self.carryx = self.plat.speedx
         self.plat = None
-        for object in [object for object in self.Objects if object != self]:
+        for object in [object for object in self.level if object != self]:
             cl,cr,cu,cd = collision(self,object,self.speedx+self.carryx+self.movex,0)
             if cl or cr:
                 self.carryx = 0
@@ -104,18 +112,19 @@ class player(base_object):
                     object.sprite.x+=self.speedx
                     batch.draw()
                     self.die()
-                if cl:
+                if cl and object.get_pusher_weight() > self.get_pusher_weight():
+                    #print("left collision")
                     if self.speedx < 0:
                         self.speedx = 0
                     self.movex += (object.hitbox[2]+6)-self.sprite.x
-                elif cr:
+                elif cr and object.get_pusher_weight() > self.get_pusher_weight():
                     if self.speedx > 0:
                         self.speedx = 0
                     self.movex += (object.hitbox[0]-6)-self.sprite.x
                 self.update_hitbox()
-        for object in [object for object in self.Objects if object != self]:
+        for object in [object for object in self.level if object != self]:
             cl,cr,cu,cd = collision(self,object,self.speedx+self.carryx+self.movex,0)
-            if cl or cr:
+            if (cl or cr) and object.get_pusher_weight() > self.weight:
                 self.die()
         self.update_hitbox()
             
@@ -133,28 +142,30 @@ class player(base_object):
             else:
                 self.buffery+=1
         self.update_hitbox()
-        for object in [object for object in self.Objects if object != self]:
+        for object in [object for object in self.level if object != self]:
             cl,cr,cu,cd = collision(self,object,self.movex+self.carryx,self.speedy+self.movey)
+            ccd,ccu = False,False#clipped(self,object,self.movex+self.carryx,self.speedy+self.movey)
             if cd or cu:
                 self.speedy = 0
-                if cd:
+                if cd or ccd:
                     if type(object).__name__ == 'button':
                         object.press()
                     elif type(object).__name__ == 'enemy' and not object.dead:
                         object.die()
+                        self.jump = True
                         if self.up:
                             self.speedy+=15
                         else:
                             self.speedy+=5
                     elif type(object).__name__=='platform':
                         self.plat = object
-                    self.movey+=(object.hitbox[3]+self.sprite.image.height/2)-self.sprite.y
+                    self.movey+=(object.hitbox[3]+self.sprite.image.height/2)-(self.sprite.y+self.movey)
                     #self.sprite.y = object.hitbox[3]+self.sprite.image.height/2
                     self.jump = False
-                elif cu:
+                elif cu or ccu:
                     self.movey+=(object.hitbox[1]-self.sprite.image.height/2)-self.sprite.y
                     #self.sprite.y = object.hitbox[1]-self.sprite.image.height/2
-                    self.speedy = -1
+                    self.speedy = 0
                 self.update_hitbox()
                     
     def teleport(self):
@@ -234,3 +245,9 @@ class player(base_object):
                 object.update_hitbox()
         self.movex = 0
         self.movey = 0
+
+    def get_pusher_weight(self):
+        if self.pusher == None:
+            return self.weight
+        else:
+            return self.pusher.get_pusher_weight()

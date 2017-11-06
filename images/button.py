@@ -12,6 +12,12 @@ class button(base_object):
         self.pressed = False
         self.gate = gate
 
+        self.stats = {
+            'can-kill-enemies':False,
+            'weight':3
+        }	
+        self.weight = self.stats['weight']
+
     def press(self):
         if self.pressed == False:
             #print("pressed")
@@ -30,8 +36,8 @@ class button(base_object):
 
     def update_hitbox(self):
         self.hitbox = [
-            self.sprite.x-self.width/2,
-            self.sprite.y-self.height/2-30,
-            self.sprite.x+self.width/2,
-            self.sprite.y+self.height/2
+            self.sprite.x-self.sprite.image.width/2,
+            self.sprite.y-self.sprite.image.height/2-10,
+            self.sprite.x+self.sprite.image.width/2,
+            self.sprite.y+self.sprite.image.height/2
             ]
